@@ -1,9 +1,14 @@
-use paste crate to resolve enum_dispatch inner scope issue
-
-The error "cannot find value `inner` in this scope" occurs because enum_dispatch
-creates an inner identifier during macro expansion, but it's not properly scoped.
-The paste crate helps by creating hygienic identifiers during macro expansion,
-ensuring the inner value is available in the correct scope.
-
-This is a more robust solution than relying on trait definition order, as it
-properly handles macro hygiene and identifier scoping.
+with rust stable version, `cargo expand --lib foo` will output:
+```
+error[E0425]: cannot find value `inner` in this scope
+  --> src/foo.rs:27:9
+   |
+27 |         #[enum_dispatch(Hello)]
+   |         ^^^^^^^^^^^^^^^^^^^^^^^ not found in this scope
+...
+34 | hello_set!(Foo, A: HelloA, B: HelloB);
+   | ------------------------------------- in this macro invocation
+   |
+   = note: this error originates in the attribute macro `enum_dispatch` which comes from the expansion of the macro `hello_set` (in Nightly builds, run with -Z macro-backtrace for more info)
+For more information about this error, try `rustc --explain E0425`.
+```
