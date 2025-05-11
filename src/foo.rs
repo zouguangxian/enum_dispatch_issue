@@ -1,10 +1,5 @@
 use enum_dispatch::enum_dispatch;
 
-#[enum_dispatch]
-pub trait Hello {
-    fn hello(&self) -> String;
-}
-
 pub struct HelloA;
 pub struct HelloB;
 
@@ -32,3 +27,8 @@ macro_rules! hello_set {
 }
 
 hello_set!(Foo, A: HelloA, B: HelloB);
+
+#[enum_dispatch]
+pub trait Hello {
+    fn hello(&self) -> String;
+}
